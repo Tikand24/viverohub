@@ -38,16 +38,20 @@
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view></router-view>
+      <snack-bar></snack-bar>
     </v-main>
   </v-app>
 </template>
 
 <script>
 
+import SnackBar from "./components/app/Snackbar.vue";
 export default {
   name: 'App',
-
+  components: {
+    SnackBar
+  },
   data: () => ({
     //
   }),
