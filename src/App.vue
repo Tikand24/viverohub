@@ -1,40 +1,10 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+  <v-app id="inspire">
+    <navigation :drawer="drawer"></navigation>
+    <v-app-bar app color="primary" dark>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-toolbar-title>Alto Jardin Hub</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -45,15 +15,28 @@
 </template>
 
 <script>
-
+import { COMPLEMENT_GET_ALL } from "@/store/complements";
 import SnackBar from "./components/app/Snackbar.vue";
+import Navigation from "./components/app/Navigation.vue";
+
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    SnackBar
+    SnackBar,
+    Navigation
   },
   data: () => ({
-    //
+    drawer: false,
   }),
+  methods: {
+    fetchAllPlants: function () {
+      this.$store.dispatch(COMPLEMENT_GET_ALL).catch((error) => {
+        console.log("error", error);
+      });
+    },
+  },
+  mounted() {
+    this.fetchAllPlants();
+  },
 };
 </script>

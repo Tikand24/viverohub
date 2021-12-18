@@ -6,6 +6,7 @@ import Statistics from '../views/Statistics/Statistics.vue';
 import Calculate from '../views/Calculate/Calculate.vue';
 import Masters from '../views/Masters/Masters.vue';
 import Plants from '../views/Masters/Plants/Plants.vue';
+import Vitrine from '../views/Vitrine/Vitrine.vue';
 import Error404 from '../views/Error404.vue';
 
 Vue.use(VueRouter);
@@ -30,6 +31,11 @@ const routes = [
     path: '/calculate',
     name: 'Calculate',
     component: Calculate,
+  },
+  {
+    path: '/vitrine',
+    name: 'Vitrine',
+    component: Vitrine,
   },
   {
     path: '/masters/',

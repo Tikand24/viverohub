@@ -23,21 +23,11 @@
           <v-data-table
             :headers="headers"
             :items="items"
-            :footer-props="footerPropsTable"
-            :options.sync="optionsTable"
             :items-per-page="perPage"
             class="elevation-1"
             :search="search"
           >
             <template v-slot:item.action="{ item }">
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <v-btn class="mx-2" fab dark small color="success" v-on="on">
-                    <v-icon dark>mdi-assignment-ind</v-icon>
-                  </v-btn>
-                </template>
-                <span>Generar Partida</span>
-              </v-tooltip>
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -48,10 +38,10 @@
                     color="light-blue"
                     v-on="on"
                   >
-                    <v-icon dark>mdi-file</v-icon>
+                    <v-icon dark>mdi-image</v-icon>
                   </v-btn>
                 </template>
-                <span>Generar Borrador</span>
+                <span>Galeria imagen</span>
               </v-tooltip>
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -62,9 +52,9 @@
                     small
                     color="orange"
                     v-on="on"
-                    v-on:click="editar(item)"
+                    v-on:click="editPlant(item)"
                   >
-                    <v-icon dark>mdi-edit</v-icon>
+                    <v-icon dark>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
                 <span>Editar</span>
@@ -91,11 +81,6 @@
               </v-alert>
             </template>
           </v-data-table>
-          <v-pagination
-            v-model="currentPage"
-            :length="numeroPaginas"
-            :total-visible="10"
-          ></v-pagination>
         </v-container>
       </v-card>
     </v-container>
@@ -103,19 +88,22 @@
       <v-navigation-drawer
         v-model="dialogCreate"
         right
-        absolute
         temporary
-        width="35vw"
+        :width="$vuetify.breakpoint.lgAndUp ? '35vw' : '100vw'"
         :permanent="dialogCreate"
+        app
       >
-        <create-plant @close="handleClose($event)"></create-plant>
+        <create-plant
+          @close="handleClose($event)"
+          :value="plantEdit"
+        ></create-plant>
       </v-navigation-drawer>
     </div>
   </div>
 </template>
 
 <script>
-  import PLANTS_MODULE from '@/store/index'
+import PLANTS_MODULE from "@/store/index";
 import { PLANT_GET_ALL } from "@/store/plants";
 import CreatePlant from "../../../components/Plants/CreatePlant.vue";
 export default {
@@ -124,6 +112,7 @@ export default {
     CreatePlant,
   },
   data: () => ({
+    plantEdit: null,
     footerPropsTable: {
       "items-per-page-options": [5, 10, 15],
       "page-text": "",
@@ -144,24 +133,21 @@ export default {
     search: "",
     optionsTable: {},
     headers: [
-      {
-        text: "Num",
-        align: "left",
-        sortable: false,
-        value: "id",
-      },
-      { text: "Nombre", value: "nombre" },
-      { text: "Libro", value: "libro" },
-      { text: "Folio", value: "folio" },
-      { text: "Partida", value: "partida" },
+      { text: "Nombre", value: "name" },
+      { text: "Nombre tecnico", value: "tecnicName" },
+      { text: "Valor unitario", value: "unitValue" },
+      { text: "bolsa", value: "bag.value" },
       { text: "Opciones", value: "action" },
     ],
-    items: [],
   }),
+  computed: {
+    items() {
+      return this.$store.getters.plants;
+    },
+  },
   watch: {},
   methods: {
     handleClose: function (event) {
-      console.log("handle", event);
       this.dialogCreate = false;
       if (event) {
         this.dialogCreate = false;
@@ -170,11 +156,13 @@ export default {
       }
     },
     fetchAllPlants: function () {
-      console.log("fethcSec");
-      PLANTS_MODULE.dispatch(PLANT_GET_ALL)
-        .catch(error => {
-          console.log('error',error);
-        })
+      PLANTS_MODULE.dispatch(PLANT_GET_ALL).catch((error) => {
+        console.log("error", error);
+      });
+    },
+    editPlant: function (item) {
+      this.plantEdit = item;
+      this.dialogCreate = true;
     },
   },
   mounted() {
