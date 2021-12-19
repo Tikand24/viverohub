@@ -1,11 +1,18 @@
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from 'firebase/storage';
 import {
   collection,
   addDoc,
   getDocs,
   getFirestore,
   serverTimestamp,
+  doc,
+  updateDoc,
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -34,8 +41,33 @@ export const addPlant = async ({
   if (image) {
     urlImage = await addImage(image);
   }
-  console.log('img',urlImage);
   return await addDoc(collection(db, 'plants'), {
+    name,
+    tecnicName,
+    unitValue,
+    image: urlImage,
+    bag,
+    createdAt: serverTimestamp(),
+    observation,
+  });
+};
+export const updatePlant = async ({
+  id,
+  name,
+  tecnicName,
+  unitValue,
+  image,
+  bag,
+  observation,
+  imgUrl,
+}) => {
+  let urlImage = imgUrl;
+  console.log('urlNew', image, id,imgUrl);
+  if (image) {
+    urlImage = await addImage(image);
+  }
+  const plantRef = doc(db, 'plants', id);
+  return await updateDoc(plantRef, {
     name,
     tecnicName,
     unitValue,
@@ -52,34 +84,38 @@ export const getAllPlants = async () => {
 export const addImage = async (image) => {
   const fileName = image ? image.name : '';
   const storageRef = ref(storage, `images/${fileName}`);
-  await uploadBytes(storageRef, image).then((snapshot) => {
-    if(snapshot)return true;
-  }).catch((err)=>console.log('error1',err));
+  await uploadBytes(storageRef, image)
+    .then((snapshot) => {
+      if (snapshot) return true;
+    })
+    .catch((err) => console.log('error1', err));
   let urlReturn = `images/${fileName}`;
-  await getDownloadURL(storageRef).then((url) => {
-    urlReturn = url;
-  }).catch((error) => {
-    // A full list of error codes is available at
-    // https://firebase.google.com/docs/storage/web/handle-errors
-    console.log(error);
-    switch (error.code) {
-      case 'storage/object-not-found':
-        // File doesn't exist
-        break;
-      case 'storage/unauthorized':
-        // User doesn't have permission to access the object
-        break;
-      case 'storage/canceled':
-        // User canceled the upload
-        break;
+  await getDownloadURL(storageRef)
+    .then((url) => {
+      urlReturn = url;
+    })
+    .catch((error) => {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      console.log(error);
+      switch (error.code) {
+        case 'storage/object-not-found':
+          // File doesn't exist
+          break;
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          break;
+        case 'storage/canceled':
+          // User canceled the upload
+          break;
 
-      // ...
+        // ...
 
-      case 'storage/unknown':
-        // Unknown error occurred, inspect the server response
-        break;
-    }
-  });
+        case 'storage/unknown':
+          // Unknown error occurred, inspect the server response
+          break;
+      }
+    });
   return urlReturn;
 };
 
