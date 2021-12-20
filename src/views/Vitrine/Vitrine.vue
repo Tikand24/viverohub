@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import PLANTS_MODULE from "@/store/index";
 import { PLANT_GET_ALL } from "@/store/plants";
 import CardPlant from "../../components/Plants/CardPlant.vue";
 export default {
@@ -38,16 +37,18 @@ export default {
   watch: {},
   methods: {
     fetchAllPlants: function () {
-      PLANTS_MODULE.dispatch(PLANT_GET_ALL).catch((error) => {
+      this.$store.dispatch(PLANT_GET_ALL).catch((error) => {
         console.log("error", error);
       });
     },
-    calculateWidth:function(){
-        return Math.floor(Math.random() * (6 - 3)) + 3
-    }
+    calculateWidth: function () {
+      return Math.floor(Math.random() * (6 - 3)) + 3;
+    },
   },
   mounted() {
-    this.fetchAllPlants();
+    if (this.items.length <= 0) {
+      this.fetchAllPlants();
+    }
   },
 };
 </script>

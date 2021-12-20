@@ -29,14 +29,14 @@ export default {
     drawer: false,
   }),
   methods: {
-    fetchAllPlants: function () {
+    fetchComplements: function () {
       this.$store.dispatch(COMPLEMENT_GET_ALL).catch((error) => {
         console.log("error", error);
       });
     },
   },
   mounted() {
-    this.fetchAllPlants();
+    this.fetchComplements();
   },
 };
 </script>

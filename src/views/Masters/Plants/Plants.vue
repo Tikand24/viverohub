@@ -103,7 +103,6 @@
 </template>
 
 <script>
-import PLANTS_MODULE from "@/store/index";
 import { PLANT_GET_ALL } from "@/store/plants";
 import CreatePlant from "../../../components/Plants/CreatePlant.vue";
 export default {
@@ -156,7 +155,7 @@ export default {
       }
     },
     fetchAllPlants: function () {
-      PLANTS_MODULE.dispatch(PLANT_GET_ALL).catch((error) => {
+      this.$store.dispatch(PLANT_GET_ALL).catch((error) => {
         console.log("error", error);
       });
     },
@@ -166,7 +165,9 @@ export default {
     },
   },
   mounted() {
+    if(this.items.length<=0){
     this.fetchAllPlants();
+    }
   },
 };
 </script>

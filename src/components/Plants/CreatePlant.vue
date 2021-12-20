@@ -150,11 +150,14 @@ export default {
   methods: {
     resetPlant: function () {
       this.plant = {
+        id: null,
         name: "",
         tecnicName: "",
         unitValue: "",
         image: null,
+        imgUrl: null,
         bag: { id: 1, value: "x35", peso: 30 },
+        observation: "",
       };
     },
     closeComponent: function () {

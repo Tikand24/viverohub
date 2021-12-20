@@ -4,10 +4,10 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            Application
+            Alto Jardin
           </v-list-item-title>
           <v-list-item-subtitle>
-            subtext
+            System BETA v1.0.0 
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -45,6 +45,7 @@ export default {
           { title: 'Home', icon: 'mdi-view-dashboard',route:'/' },
           { title: 'Plantas', icon: 'mdi-flower-outline',route:'/masters/plants'  },
           { title: 'Portafolio', icon: 'mdi-cart',route:'/vitrine' },
+          { title: 'Balance', icon: 'mdi-currency-usd',route:'/masters/balances' },
         ],
   }),
   props:['drawer'],

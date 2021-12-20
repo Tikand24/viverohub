@@ -1,10 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   collection,
   addDoc,
@@ -13,6 +8,7 @@ import {
   serverTimestamp,
   doc,
   updateDoc,
+  getDoc,
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -51,6 +47,7 @@ export const addPlant = async ({
     observation,
   });
 };
+
 export const updatePlant = async ({
   id,
   name,
@@ -62,7 +59,6 @@ export const updatePlant = async ({
   imgUrl,
 }) => {
   let urlImage = imgUrl;
-  console.log('urlNew', image, id,imgUrl);
   if (image) {
     urlImage = await addImage(image);
   }
@@ -121,4 +117,60 @@ export const addImage = async (image) => {
 
 export const getAllComplements = async () => {
   return await getDocs(collection(db, 'complements'));
+};
+
+export const addBalance = async ({
+  month,
+  sales,
+  expenses,
+  totalSale,
+  expenseSale,
+  gain,
+  distribution,
+  totalExpenes,
+}) => {
+  return await addDoc(collection(db, 'balances'), {
+    month,
+    sales,
+    expenses,
+    totalSale,
+    expenseSale,
+    gain,
+    distribution,
+    totalExpenes,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateBalance = async ({
+  id,
+  month,
+  sales,
+  expenses,
+  totalSale,
+  expenseSale,
+  gain,
+  distribution,
+  totalExpenes,
+}) => {
+  const balanceRef = doc(db, 'balances', id);
+  return await updateDoc(balanceRef, {
+    month,
+    sales,
+    expenses,
+    totalSale,
+    expenseSale,
+    gain,
+    distribution,
+    totalExpenes,
+    createdAt: serverTimestamp(),
+  });
+};
+export const getAllBalances = async () => {
+  return await getDocs(collection(db, 'balances'));
+};
+
+export const getBalanceById = async (id) => {
+  const docRef = doc(db, 'balances', id);
+  return await getDoc(docRef);
 };

@@ -5,12 +5,14 @@ export const COMPLEMENT_SET_ALL = 'COMPLEMENT_SET_ALL';
 export default {
   state: {
     complements: {
-        bags:[]
+        bags:[],
+        expenseTypes:[]
     },
   },
   mutations: {
-    [COMPLEMENT_SET_ALL]: (state, bags) => {
-      state.complements.bags = bags;
+    [COMPLEMENT_SET_ALL]: (state, complement) => {
+      state.complements.bags = complement.bags;
+      state.complements.expenseTypes = complement.expenseTypes;
     },
   },
   actions: {
@@ -18,11 +20,15 @@ export default {
       return new Promise((resolve, reject) => {
         getAllComplements()
           .then((response) => {
-            let dataBags = [];
+            const complementsData = {
+              bags:[],
+              expenseType:[]
+            };
             response.forEach((doc) => {
-                dataBags = doc.data().bags
+              complementsData.bags = doc.data().bags;
+              complementsData.expenseTypes = doc.data().expenseType;
             });
-            commit(COMPLEMENT_SET_ALL, dataBags);
+            commit(COMPLEMENT_SET_ALL, complementsData);
             resolve();
           })
           .catch((error) => {
