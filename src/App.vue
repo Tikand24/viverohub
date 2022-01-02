@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import "@/styles/overrides.sass";
+
 import { COMPLEMENT_GET_ALL } from "@/store/complements";
 import SnackBar from "./components/app/Snackbar.vue";
 import Navigation from "./components/app/Navigation.vue";
@@ -23,7 +25,7 @@ export default {
   name: "App",
   components: {
     SnackBar,
-    Navigation
+    Navigation,
   },
   data: () => ({
     drawer: false,

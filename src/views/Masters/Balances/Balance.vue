@@ -6,7 +6,7 @@
           <v-card-title>Balances</v-card-title>
           <v-card-title>
             <v-btn color="primary" dark to="balances/manage"
-              >Crear planta</v-btn
+              >Crear balance</v-btn
             >
             <div class="flex-grow-1"></div>
             <v-text-field

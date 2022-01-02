@@ -174,3 +174,164 @@ export const getBalanceById = async (id) => {
   const docRef = doc(db, 'balances', id);
   return await getDoc(docRef);
 };
+
+export const addList = async ({
+  customer,
+  name,
+  route,
+  percentage,
+  observation,
+  products,
+  status
+}) => {
+  return await addDoc(collection(db, 'lists'), {
+    name,
+    customer,
+    route,
+    percentage,
+    observation,
+    products,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateList = async ({
+  id,
+  name,
+  customer,
+  route,
+  percentage,
+  observation,
+  products,
+  status
+}) => {
+  const listRef = doc(db, 'lists', id);
+  return await updateDoc(listRef, {
+    name,
+    customer,
+    route,
+    percentage,
+    observation,
+    products,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+export const getAllLists = async () => {
+  return await getDocs(collection(db, 'lists'));
+};
+
+export const getListById = async (id) => {
+  const docRef = doc(db, 'lists', id);
+  return await getDoc(docRef);
+};
+
+export const addRoute = async ({
+  name,
+  code,
+  status,
+  observation,
+}) => {
+  return await addDoc(collection(db, 'routes'), {
+    name,
+    code,
+    observation,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateRoute = async ({
+  id,
+  name,
+  code,
+  status,
+  observation
+}) => {
+  const routeRef = doc(db, 'routes', id);
+  return await updateDoc(routeRef, {
+    name,
+    code,
+    status,
+    observation,
+    createdAt: serverTimestamp(),
+  });
+};
+export const getAllRoutes = async () => {
+  return await getDocs(collection(db, 'routes'));
+};
+
+export const getRouteById = async (id) => {
+  const docRef = doc(db, 'routes', id);
+  return await getDoc(docRef);
+};
+
+
+export const addCustomer = async ({
+  name,
+  customName,
+  code,
+  tipDoc,
+  document,
+  phone,
+  email,
+  route,
+  observation,
+  percentage,
+  status
+}) => {
+  return await addDoc(collection(db, 'customers'), {
+    name,
+    customName,
+    code,
+    tipDoc,
+    document,
+    phone,
+    email,
+    route,
+    observation,
+    percentage,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateCustomer = async ({
+  id,
+  name,
+  customName,
+  code,
+  tipDoc,
+  document,
+  phone,
+  email,
+  route,
+  observation,
+  percentage,
+  status
+}) => {
+  const customerRef = doc(db, 'customers', id);
+  return await updateDoc(customerRef, {
+    name,
+    customName,
+    code,
+    tipDoc,
+    document,
+    phone,
+    email,
+    route,
+    observation,
+    percentage,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+export const getAllCustomers = async () => {
+  return await getDocs(collection(db, 'customers'));
+};
+
+export const getCustomerById = async (id) => {
+  const docRef = doc(db, 'customers', id);
+  return await getDoc(docRef);
+};

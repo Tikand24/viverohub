@@ -9,6 +9,9 @@ import Plants from '../views/Masters/Plants/Plants.vue';
 import Vitrine from '../views/Vitrine/Vitrine.vue';
 import Balance from '../views/Masters/Balances/Balance.vue';
 import BalanceCreate from '../views/Masters/Balances/BalanceCreate.vue';
+import Lists from '../views/Masters/Lists/Lists.vue';
+import Routes from '../views/Masters/Routes/Routes.vue';
+import Customers from '../views/Masters/Customers/Customers.vue';
 import Error404 from '../views/Error404.vue';
 
 Vue.use(VueRouter);
@@ -58,6 +61,21 @@ const routes = [
         path: 'balances/manage/:id?',
         name: 'Balances',
         component: BalanceCreate,
+      },
+      {
+        path: 'lists',
+        name: 'Lists',
+        component: Lists,
+      },
+      {
+        path: 'routes',
+        name: 'Routes',
+        component: Routes,
+      },
+      {
+        path: 'customers',
+        name: 'Customers',
+        component: Customers,
       },
     ],
   },
