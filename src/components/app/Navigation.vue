@@ -49,6 +49,7 @@ export default {
           { title: 'Listas', icon: 'mdi-home',route:'/masters/lists' },
           { title: 'Rutas', icon: 'mdi-home',route:'/masters/routes' },
           { title: 'Clientes', icon: 'mdi-home',route:'/masters/customers' },
+          { title: 'Familias', icon: 'mdi-home',route:'/masters/families' },
         ],
   }),
   props:['drawer'],

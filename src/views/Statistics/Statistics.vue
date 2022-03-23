@@ -1,22 +1,22 @@
 <template>
   <v-container>
     <v-row>
-          <v-col
-            v-for="({ actionIcon, actionText, ...attrs }, i) in stats"
-            :key="i"
-            cols="12"
-            md="4"
-            lg="3"
-          >
-            <material-stat-card v-bind="attrs">
-              <template #actions>
-                <v-icon class="mr-2" small v-text="actionIcon" />
-                <div class="text-truncate">
-                  {{ actionText }}
-                </div>
-              </template>
-            </material-stat-card>
-          </v-col>
+      <v-col
+        v-for="({ actionIcon, actionText, ...attrs }, i) in stats"
+        :key="i"
+        cols="12"
+        md="4"
+        lg="3"
+      >
+        <material-stat-card v-bind="attrs">
+          <template #actions>
+            <v-icon class="mr-2" small v-text="actionIcon" />
+            <div class="text-truncate">
+              {{ actionText }}
+            </div>
+          </template>
+        </material-stat-card>
+      </v-col>
       <v-col cols="12" md="12" lg="12">
         <Sales />
       </v-col>
@@ -31,9 +31,9 @@ export default {
   name: "Statistics",
   components: {
     Sales,
-    MaterialStatCard
+    MaterialStatCard,
   },
-  data:()=>({
+  data: () => ({
     stats: [
       {
         color: "red",
@@ -47,8 +47,8 @@ export default {
         title: "Retornos",
         value: "$5,301,600",
       },
-    ]
-  })
+    ],
+  }),
 };
 </script>
 

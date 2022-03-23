@@ -12,6 +12,8 @@ import BalanceCreate from '../views/Masters/Balances/BalanceCreate.vue';
 import Lists from '../views/Masters/Lists/Lists.vue';
 import Routes from '../views/Masters/Routes/Routes.vue';
 import Customers from '../views/Masters/Customers/Customers.vue';
+import Family from '../views/Masters/Family/Family.vue';
+import FamilyStatistics from '../views/Masters/Family/FamilyStatistics.vue';
 import Error404 from '../views/Error404.vue';
 
 Vue.use(VueRouter);
@@ -76,6 +78,16 @@ const routes = [
         path: 'customers',
         name: 'Customers',
         component: Customers,
+      },
+      {
+        path: 'families',
+        name: 'Families',
+        component: Family,
+      },
+      {
+        path: 'families-statistics',
+        name: 'Families',
+        component: FamilyStatistics,
       },
     ],
   },

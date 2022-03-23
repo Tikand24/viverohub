@@ -366,7 +366,17 @@ export default {
       return totalPrice;
     },
     plants() {
-      return this.$store.getters.plants;
+       const plants = this.$store.getters.plants;
+      plants.sort((a,b)=>{
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
+      return plants;
     },
     expenseTypes() {
       return this.$store.getters.complements.expenseTypes;

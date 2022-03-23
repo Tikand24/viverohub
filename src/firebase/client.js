@@ -182,7 +182,7 @@ export const addList = async ({
   percentage,
   observation,
   products,
-  status
+  status,
 }) => {
   return await addDoc(collection(db, 'lists'), {
     name,
@@ -204,7 +204,7 @@ export const updateList = async ({
   percentage,
   observation,
   products,
-  status
+  status,
 }) => {
   const listRef = doc(db, 'lists', id);
   return await updateDoc(listRef, {
@@ -227,12 +227,7 @@ export const getListById = async (id) => {
   return await getDoc(docRef);
 };
 
-export const addRoute = async ({
-  name,
-  code,
-  status,
-  observation,
-}) => {
+export const addRoute = async ({ name, code, status, observation }) => {
   return await addDoc(collection(db, 'routes'), {
     name,
     code,
@@ -242,13 +237,7 @@ export const addRoute = async ({
   });
 };
 
-export const updateRoute = async ({
-  id,
-  name,
-  code,
-  status,
-  observation
-}) => {
+export const updateRoute = async ({ id, name, code, status, observation }) => {
   const routeRef = doc(db, 'routes', id);
   return await updateDoc(routeRef, {
     name,
@@ -267,7 +256,6 @@ export const getRouteById = async (id) => {
   return await getDoc(docRef);
 };
 
-
 export const addCustomer = async ({
   name,
   customName,
@@ -279,7 +267,7 @@ export const addCustomer = async ({
   route,
   observation,
   percentage,
-  status
+  status,
 }) => {
   return await addDoc(collection(db, 'customers'), {
     name,
@@ -309,7 +297,7 @@ export const updateCustomer = async ({
   route,
   observation,
   percentage,
-  status
+  status,
 }) => {
   const customerRef = doc(db, 'customers', id);
   return await updateDoc(customerRef, {
@@ -333,5 +321,33 @@ export const getAllCustomers = async () => {
 
 export const getCustomerById = async (id) => {
   const docRef = doc(db, 'customers', id);
+  return await getDoc(docRef);
+};
+
+export const addFamily = async ({ family, familyMembers, status }) => {
+  return await addDoc(collection(db, 'family'), {
+    family,
+    familyMembers,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateFamily = async ({ id, family, familyMembers, status}) => {
+  const routeRef = doc(db, 'family', id);
+  return await updateDoc(routeRef, {
+    family,
+    familyMembers,
+    status,
+    createdAt: serverTimestamp(),
+  });
+};
+export const getAllFamilies = async () => {
+  console.log('getDocsFamilies');
+  return await getDocs(collection(db, 'family'));
+};
+
+export const getFamilyById = async (id) => {
+  const docRef = doc(db, 'family', id);
   return await getDoc(docRef);
 };
