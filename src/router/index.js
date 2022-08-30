@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
 import MapPlace from '../views/MapPlace/MapPlace.vue';
+import Map from '../views/Maps/Map.vue';
 import Statistics from '../views/Statistics/Statistics.vue';
 import Calculate from '../views/Calculate/Calculate.vue';
 import Masters from '../views/Masters/Masters.vue';
@@ -22,12 +22,17 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: FamilyStatistics,
   },
   {
     path: '/map-place',
     name: 'MapPlace',
     component: MapPlace,
+  },
+  {
+    path: '/map',
+    name: 'Map',
+    component: Map,
   },
   {
     path: '/statistics',

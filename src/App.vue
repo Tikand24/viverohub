@@ -1,10 +1,11 @@
 <template>
   <v-app id="inspire">
+    <title>{{ appName }}</title>
     <navigation :drawer="drawer"></navigation>
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Alto Jardin Hub</v-toolbar-title>
+      <v-toolbar-title>{{ appName }}</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -29,6 +30,7 @@ export default {
   },
   data: () => ({
     drawer: false,
+    appName: process.env.VUE_APP_NAME || 'App name'
   }),
   methods: {
     fetchComplements: function () {

@@ -226,7 +226,6 @@ export default {
       });
     },
     [FAMILY_GET_ALL]: ({ commit }) => {
-      console.log('fmaiGetAll');
       return new Promise((resolve, reject) => {
         getAllFamilies()
           .then((response) => {

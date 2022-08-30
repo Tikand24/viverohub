@@ -86,15 +86,15 @@
                 >Indices:</span
               >
               <v-tab class="mr-3">
-                <v-icon class="mr-2"> mdi-bug </v-icon>
+                <v-icon class="mr-2"> mdi-face-woman </v-icon>
                 Mujeres
               </v-tab>
               <v-tab class="mr-3">
-                <v-icon class="mr-2"> mdi-code-tags </v-icon>
+                <v-icon class="mr-2"> mdi-face-man </v-icon>
                 Hombres
               </v-tab>
               <v-tab>
-                <v-icon class="mr-2"> mdi-cloud </v-icon>
+                <v-icon class="mr-2"> mdi-account-multiple-plus </v-icon>
                 Otros
               </v-tab>
             </v-tabs>
@@ -127,6 +127,7 @@ import Vue from "vue";
 import MaterialStatCard from "../../../components/app/MaterialStatsCard.vue";
 import MaterialChartCard from "../../../components/app/MaterialChartCard.vue";
 import MaterialCard from "../../../components/app/MaterialCard.vue";
+import { FAMILY_GET_ALL } from "@/store/masters";
 
 const lineSmooth = Vue.chartist.Interpolation.cardinal({
   tension: 0,
@@ -146,7 +147,7 @@ export default {
         type: "Bar",
         color: "#FD9A13",
         title: "Cabezas de hogar",
-        subtitle: "",
+        subtitle: "H: 14, M: 30",
         time: "actualizado hace 10 minutes ",
         data: {
           labels: ["Hombres", "Mujeres"],
@@ -185,8 +186,8 @@ export default {
         name: "generoasociadosbar",
         type: "Bar",
         color: "primary",
-        title: "Genero de asociados",
-        subtitle: "",
+        title: "Asociados",
+        subtitle: "H: 14, M: 30",
         time: "actualizado hace 10 minutes ",
         data: {
           labels: ["Hombres", "Mujeres"],
@@ -378,6 +379,11 @@ export default {
 
       chart.value = this.families.length;
     },
+    fetchAllFamilies: function () {
+      this.$store.dispatch(FAMILY_GET_ALL).catch((error) => {
+        console.log("error", error);
+      });
+    },
     
   },
   watch: {
@@ -445,6 +451,7 @@ export default {
   },
   mounted() {
     this.setNumeroSocios();
+    this.fetchAllFamilies();
   },
 };
 </script>

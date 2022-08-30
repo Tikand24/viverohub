@@ -4,7 +4,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            Alto Jardin
+            {{ appName }}
           </v-list-item-title>
           <v-list-item-subtitle>
             System BETA v1.0.0 
@@ -41,15 +41,11 @@
 export default {
   name: "Navigation",
   data: () => ({
+    appName: process.env.VUE_APP_NAME || 'App name',
       items: [
-          { title: 'Home', icon: 'mdi-view-dashboard',route:'/' },
-          { title: 'Plantas', icon: 'mdi-flower-outline',route:'/masters/plants'  },
-          { title: 'Portafolio', icon: 'mdi-cart',route:'/vitrine' },
-          { title: 'Balance', icon: 'mdi-currency-usd',route:'/masters/balances' },
-          { title: 'Listas', icon: 'mdi-home',route:'/masters/lists' },
-          { title: 'Rutas', icon: 'mdi-home',route:'/masters/routes' },
-          { title: 'Clientes', icon: 'mdi-home',route:'/masters/customers' },
+          { title: 'Inicio', icon: 'mdi-view-dashboard',route:'/' },
           { title: 'Familias', icon: 'mdi-home',route:'/masters/families' },
+          { title: 'Map', icon: 'mdi-map',route:'/map' },
         ],
   }),
   props:['drawer'],
