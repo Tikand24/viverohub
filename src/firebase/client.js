@@ -21,6 +21,8 @@ const firebaseConfig = {
   measurementId: process.env.VUE_APP_measurementId,
 };
 
+console.log('dataEnv',process.env)
+
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 const db = getFirestore();
