@@ -3,7 +3,9 @@
     <v-container>
       <v-card>
         <v-container>
-          <v-card-title>Familias</v-card-title>
+          <v-card-title class="text-h2 font-weight-black"
+            >Familias</v-card-title
+          >
           <v-card-title>
             <v-btn
               color="primary"
@@ -15,7 +17,7 @@
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
-              label="Search"
+              label="Buscar"
               single-line
               hide-details
             ></v-text-field>
@@ -24,6 +26,7 @@
             :headers="headers"
             :items="items"
             :items-per-page="perPage"
+            :loading="loading"
             class="elevation-1"
             :search="search"
           >
@@ -34,12 +37,23 @@
                     class="mx-2"
                     fab
                     dark
-                    small
+                    x-small
                     color="orange"
                     v-on="on"
                     v-on:click="editFamily(item)"
                   >
                     <v-icon dark>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="red"
+                    v-on="on"
+                    v-on:click="removeFamily(item)"
+                  >
+                    <v-icon dark>mdi-delete</v-icon>
                   </v-btn>
                 </template>
                 <span>Editar</span>
@@ -80,15 +94,42 @@
       >
         <create-family
           @close="handleClose($event)"
-          :value="routeEdit"
+          @onUpdate="hanldeUpdate($event)"
+          @onSave="hanldeSave($event)"
+          :value="familyToEdit"
         ></create-family>
       </v-navigation-drawer>
     </div>
+    <v-dialog v-model="dialogRemove" persistent max-width="300">
+      <v-card>
+        <v-card-title class="text-h5">
+          Eliminar familia
+        </v-card-title>
+        <v-card-text
+          >¿Esta seguro que desea eliminar la familia? Ningun dato se podra
+          recuperar</v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialogRemove = false">
+            Cancelar
+          </v-btn>
+          <v-btn
+            :loading="loadingRemove"
+            color="green darken-1"
+            text
+            @click="handleRemove()"
+          >
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { FAMILY_GET_ALL } from "@/store/masters";
+import { FAMILY_GET_ALL, FAMILY_REMOVE } from "@/store/masters";
 import CreateFamily from "../../../components/Family/CreateFamily.vue";
 export default {
   name: "Family",
@@ -96,7 +137,7 @@ export default {
     CreateFamily,
   },
   data: () => ({
-    routeEdit: null,
+    familyToEdit: null,
     footerPropsTable: {
       "items-per-page-options": [5, 10, 15],
       "page-text": "",
@@ -106,6 +147,9 @@ export default {
       prevIcon: "",
       nextIcon: "",
     },
+    idFamilyToRemove: null,
+    dialogRemove: false,
+    loadingRemove: false,
     itemSelected: {},
     dialogCreate: null,
     numberSearch: 1,
@@ -113,7 +157,7 @@ export default {
     numeroPaginas: 1,
     path: "",
     perPage: 5,
-    loading: true,
+    loading: false,
     search: "",
     optionsTable: {},
     headers: [
@@ -131,31 +175,69 @@ export default {
   },
   watch: {},
   methods: {
-    handleClose: function (event) {
+    hanldeSave: function() {
       this.dialogCreate = false;
+      this.fetchAllFamilies();
+    },
+    handleClose: function(event) {
+      this.dialogCreate = false;
+      this.familyToEdit = null;
       if (event) {
         this.dialogCreate = false;
       } else {
         this.dialogCreate = false;
       }
     },
-    fetchAllFamilies: function () {
-      this.$store.dispatch(FAMILY_GET_ALL).catch((error) => {
-        console.log("error", error);
-      });
+    hanldeUpdate: function(event) {
+      if (event) {
+        this.dialogCreate = false;
+        this.fetchAllFamilies();
+      }
     },
-    editFamily: function (item) {
-      this.routeEdit = item;
+    fetchAllFamilies: async function() {
+      try {
+        this.loading = true;
+        await this.$store.dispatch(FAMILY_GET_ALL).catch(() => {
+        });
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
+    },
+    editFamily: function(item) {
+      this.familyToEdit = item;
       this.dialogCreate = true;
+    },
+    removeFamily: function(item) {
+      this.idFamilyToRemove = item.id;
+      this.dialogRemove = true;
+    },
+    handleRemove: async function() {
+      try {
+        this.loadingRemove = true;
+        await this.$store
+          .dispatch(FAMILY_REMOVE, this.idFamilyToRemove)
+          .then(() => {
+            this.fetchAllFamilies();
+            this.loadingRemove = false;
+            this.dialogRemove = false;
+          })
+          .catch(() => {
+            this.loadingRemove = false;
+            this.dialogRemove = false;
+          });
+        this.loadingRemove = false;
+      } catch (error) {
+        this.loadingRemove = false;
+      }
     },
   },
   mounted() {
-    if(this.items.length<=0){
-    this.fetchAllFamilies();
+    if (this.items.length <= 0) {
+      this.fetchAllFamilies();
     }
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

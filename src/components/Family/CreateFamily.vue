@@ -3,7 +3,9 @@
     <v-container>
       <v-card>
         <v-card-title class="d-flex justify-space-between">
-          <div>{{ family.id ? "Editar familia" : "Crear familia" }}</div>
+          <div class="text-h2 font-weight-black">
+            {{ family.id ? "Editar familia" : "Crear familia" }}
+          </div>
           <div>
             <v-btn
               class="mr-2"
@@ -295,7 +297,10 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        console.log('valEditar');
+        console.log("valEditar", val);
+        this.family = val.family;
+        this.family.id = val.id;
+        this.familyMembers = val.familyMembers;
       }
     },
   },
@@ -327,7 +332,7 @@ export default {
     },
   },
   methods: {
-    addFamilyMemberRow: function () {
+    addFamilyMemberRow: function() {
       this.familyMembers.push({
         firstName: "",
         lastName: "",
@@ -339,25 +344,26 @@ export default {
         gender: "Hombre",
       });
     },
-    resetFamily: function () {
+    resetFamily: function() {
       this.familyMembers = [];
-      this.family= {
-      id: null,
-      name: "",
-      headFamilyFirstName: "",
-      headFamilyLastName: "",
-      headFamilyTypeId: "",
-      headFamilyIdentification: "",
-      headFamilyPhone: "",
-      headFamilyRelationship: "",
-      headFamilyGender: "",
-      observation: "",
-    };
+      this.family = {
+        id: null,
+        name: "",
+        headFamilyFirstName: "",
+        headFamilyLastName: "",
+        headFamilyTypeId: "",
+        headFamilyIdentification: "",
+        headFamilyPhone: "",
+        headFamilyRelationship: "",
+        headFamilyGender: "",
+        observation: "",
+      };
     },
-    closeComponent: function () {
+    closeComponent: function() {
+      this.resetFamily();
       this.$emit("close");
     },
-    validFamily: function () {
+    validFamily: function() {
       if (this.family.name.length <= 0) {
         this.$store.commit(SNACK_SHOW, {
           msg: "Digite el nombre de la familia",
@@ -401,20 +407,21 @@ export default {
       });
       if (!isValid) {
         this.$store.commit(SNACK_SHOW, {
-          msg: "Verifique los datos de nombre y genero de los miembros del hogar",
+          msg:
+            "Verifique los datos de nombre y genero de los miembros del hogar",
           color: "warning",
         });
         return false;
       }
       return true;
     },
-    saveFamily: async function () {
+    saveFamily: async function() {
       if (!this.validFamily()) {
         return false;
       }
       this.loading = true;
       const family = {
-        id:null,
+        id: null,
         family: this.family,
         familyMembers: this.familyMembers,
       };
@@ -428,7 +435,7 @@ export default {
             msg: "Familia guardada correctamente",
             color: "success",
           });
-          this.$emit("close", this.route);
+          this.$emit("onSave", family);
           this.resetFamily();
         })
         .catch((err) => {
@@ -440,19 +447,19 @@ export default {
           });
         });
     },
-    updateFamily: async function () {
+    updateFamily: async function() {
       if (!this.validFamily()) {
         return false;
       }
       this.loading = true;
       const family = {
-        id:null,
+        id: this.family.id,
         family: this.family,
         familyMembers: this.familyMembers,
       };
       family.status = "activo";
       await this.$store
-        .dispatch(FAMILY_UPDATE, this.route)
+        .dispatch(FAMILY_UPDATE, family)
         .then((response) => {
           console.log("update list fnc", response);
           this.loading = false;
@@ -460,7 +467,7 @@ export default {
             msg: "Familia Editada correctamente",
             color: "success",
           });
-          this.$emit("close", this.route);
+          this.$emit("onUpdate", family);
           this.resetFamily();
         })
         .catch((err) => {

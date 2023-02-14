@@ -9,6 +9,7 @@ import {
   doc,
   updateDoc,
   getDoc,
+  deleteDoc
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -21,7 +22,6 @@ const firebaseConfig = {
   measurementId: process.env.VUE_APP_measurementId,
 };
 
-console.log('dataEnv',process.env)
 
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
@@ -95,7 +95,6 @@ export const addImage = async (image) => {
     .catch((error) => {
       // A full list of error codes is available at
       // https://firebase.google.com/docs/storage/web/handle-errors
-      console.log(error);
       switch (error.code) {
         case 'storage/object-not-found':
           // File doesn't exist
@@ -344,8 +343,11 @@ export const updateFamily = async ({ id, family, familyMembers, status}) => {
     createdAt: serverTimestamp(),
   });
 };
+
+export const removeFamily = async (id) => {
+  return await deleteDoc(doc(db, 'family', id));
+};
 export const getAllFamilies = async () => {
-  console.log('getDocsFamilies');
   return await getDocs(collection(db, 'family'));
 };
 

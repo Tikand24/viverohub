@@ -11,6 +11,7 @@ import {
   updateFamily,
   getAllFamilies,
   getFamilyById,
+  removeFamily,
 } from '../firebase/client';
 export const ROUTE_GET = 'ROUTE_GET';
 export const ROUTE_SET = 'ROUTE_SET';
@@ -27,6 +28,7 @@ export const FAMILY_SET = 'FAMILY_SET';
 export const FAMILY_UPDATE = 'FAMILY_UPDATE';
 export const FAMILY_GET_ALL = 'FAMILY_GET_ALL';
 export const FAMILY_SET_ALL = 'FAMILY_SET_ALL';
+export const FAMILY_REMOVE = 'FAMILY_REMOVE';
 
 export default {
   state: {
@@ -99,8 +101,7 @@ export default {
     [ROUTE_SET]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         addRoute(data)
-          .then((response) => {
-            console.log('route create', response);
+          .then(() => {
             commit(ROUTE_SET, { route: data, isPush: true });
             resolve();
           })
@@ -144,8 +145,7 @@ export default {
     [ROUTE_UPDATE]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         updateRoute(data)
-          .then((response) => {
-            console.log('Update route', response);
+          .then(() => {
             commit(ROUTE_UPDATE, { route: data });
             resolve(data);
           })
@@ -157,8 +157,7 @@ export default {
     [CUSTOMER_SET]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         addCustomer(data)
-          .then((response) => {
-            console.log('customer create', response);
+          .then(() => {
             commit(CUSTOMER_SET, { customer: data, isPush: true });
             resolve(data);
           })
@@ -202,8 +201,7 @@ export default {
     [CUSTOMER_UPDATE]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         updateCustomer(data)
-          .then((response) => {
-            console.log('Update customer', response);
+          .then(() => {
             commit(CUSTOMER_UPDATE, { customer: data });
             resolve(data);
           })
@@ -215,8 +213,7 @@ export default {
     [FAMILY_SET]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         addFamily(data)
-          .then((response) => {
-            console.log('family create', response);
+          .then(() => {
             commit(FAMILY_SET, { family: data, isPush: true });
             resolve();
           })
@@ -226,6 +223,7 @@ export default {
       });
     },
     [FAMILY_GET_ALL]: ({ commit }) => {
+      commit(FAMILY_SET_ALL, []);
       return new Promise((resolve, reject) => {
         getAllFamilies()
           .then((response) => {
@@ -257,11 +255,23 @@ export default {
           });
       });
     },
-    [FAMILY_UPDATE]: ({ commit }, data) => {
+    [FAMILY_REMOVE]: ({commit},id) => {
+      return new Promise((resolve, reject) => {
+        removeFamily(id)
+          .then(() => {
+            commit(id);
+            resolve(id);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    
+    [FAMILY_UPDATE]: ({commit},data) => {
       return new Promise((resolve, reject) => {
         updateFamily(data)
-          .then((response) => {
-            console.log('Update family', response);
+          .then(() => {
             commit(FAMILY_UPDATE, { family: data });
             resolve(data);
           })
