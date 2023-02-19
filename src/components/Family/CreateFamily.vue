@@ -119,6 +119,60 @@
                           outlined
                         ></v-select>
                       </v-col>
+                      <v-col cols="12" md="12" lg="6"
+                        ><v-dialog
+                          ref="dialogpickerheaderfamily"
+                          v-model="modalPickerDateHeader"
+                          :return-value.sync="family.birthDate"
+                          persistent
+                          width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="family.birthDate"
+                              label="Fecha de nacimiento"
+                              prepend-icon="mdi-calendar"
+                              outlined
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="family.birthDate"
+                            :active-picker.sync="activePicker"
+                            :max="
+                              new Date(
+                                Date.now() -
+                                  new Date().getTimezoneOffset() * 60000
+                              )
+                                .toISOString()
+                                .substring(0, 10)
+                            "
+                            min="1950-01-01"
+                          >
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="modalPickerDateHeader = false"
+                            >
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="
+                                $refs.dialogpickerheaderfamily.save(
+                                  family.birthDate
+                                )
+                              "
+                            >
+                              OK
+                            </v-btn>
+                          </v-date-picker>
+                        </v-dialog>
+                      </v-col>
                       <v-col cols="12" md="12" lg="12">
                         <v-textarea
                           v-model="family.observation"
@@ -218,6 +272,57 @@
                           outlined
                         ></v-select>
                       </v-col>
+                      <v-col cols="12" md="12" lg="6"
+                        ><v-dialog
+                          :ref="`dialogPickerMember${i}`"
+                          :key="`dialogPickerMember${i}`"
+                          v-model="modalPickerDateMember"
+                          :return-value.sync="member.birthDate"
+                          persistent
+                          width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="member.birthDate"
+                              label="Fecha de nacimiento"
+                              prepend-icon="mdi-calendar"
+                              outlined
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            v-model="member.birthDate"
+                            :active-picker.sync="activePicker"
+                            :max="
+                              new Date(
+                                Date.now() -
+                                  new Date().getTimezoneOffset() * 60000
+                              )
+                                .toISOString()
+                                .substring(0, 10)
+                            "
+                            min="1950-01-01"
+                          >
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="modalPickerDateMember = false"
+                            >
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="handleSaveDateMember(i, member.birthDate)"
+                            >
+                              OK
+                            </v-btn>
+                          </v-date-picker>
+                        </v-dialog>
+                      </v-col>
                       <v-col cols="12" md="12" lg="12">
                         <v-textarea
                           v-model="member.observation"
@@ -279,6 +384,9 @@ export default {
   components: {},
   data: () => ({
     typeForm: "create",
+    modalPickerDateMember: false,
+    modalPickerDateHeader: false,
+    activePicker: null,
     family: {
       id: null,
       name: "",
@@ -290,6 +398,7 @@ export default {
       headFamilyRelationship: "",
       headFamilyGender: "",
       observation: "",
+      birthDate: null,
     },
     familyMembers: [],
     loading: false,
@@ -297,11 +406,16 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        console.log("valEditar", val);
         this.family = val.family;
         this.family.id = val.id;
         this.familyMembers = val.familyMembers;
       }
+    },
+    modalPickerDateHeader(val) {
+      val && setTimeout(() => (this.activePicker = "YEAR"));
+    },
+    modalPickerDateMember(val) {
+      val && setTimeout(() => (this.activePicker = "YEAR"));
     },
   },
   computed: {
@@ -342,6 +456,7 @@ export default {
         relationship: null,
         observation: "",
         gender: "Hombre",
+        birthDate: null,
       });
     },
     resetFamily: function() {
@@ -357,11 +472,16 @@ export default {
         headFamilyRelationship: "",
         headFamilyGender: "",
         observation: "",
+        birthDate: null,
       };
     },
     closeComponent: function() {
       this.resetFamily();
       this.$emit("close");
+    },
+    handleSaveDateMember: function(index, value) {
+      this.$refs[`dialogPickerMember${index}`][0].save(value);
+      this.modalPickerDateMember = false;
     },
     validFamily: function() {
       if (this.family.name.length <= 0) {

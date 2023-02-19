@@ -29,34 +29,45 @@
             :loading="loading"
             class="elevation-1"
             :search="search"
-          >
+            ><template v-slot:top>
+              <div class="d-flex justify-end mb-6">
+                <v-btn
+                  class="ma-2"
+                  dark
+                  color="green"
+                  @click="() => handleDownloadExcel()"
+                >
+                  <v-icon dark>mdi-file-excel</v-icon>
+                </v-btn>
+              </div>
+            </template>
             <template v-slot:item.action="{ item }">
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    x-small
+                  <v-icon
+                    small
+                    v-on="on"
                     color="orange"
-                    v-on="on"
-                    v-on:click="editFamily(item)"
-                  >
-                    <v-icon dark>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn
                     class="mx-2"
-                    fab
-                    dark
-                    x-small
-                    color="red"
-                    v-on="on"
-                    v-on:click="removeFamily(item)"
+                    v-on:click="editFamily(item)"
+                    >mdi-pencil</v-icon
                   >
-                    <v-icon dark>mdi-delete</v-icon>
-                  </v-btn>
                 </template>
                 <span>Editar</span>
+              </v-tooltip>
+
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    small
+                    v-on="on"
+                    color="red"
+                    class="mx-2"
+                    v-on:click="removeFamily(item)"
+                    >mdi-delete</v-icon
+                  >
+                </template>
+                <span>Eliminar</span>
               </v-tooltip>
             </template>
             <template slot="no-data">
@@ -129,8 +140,15 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import { FAMILY_GET_ALL, FAMILY_REMOVE } from "@/store/masters";
 import CreateFamily from "../../../components/Family/CreateFamily.vue";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/es";
+dayjs.locale("es");
+dayjs.extend(relativeTime);
 export default {
   name: "Family",
   components: {
@@ -175,6 +193,65 @@ export default {
   },
   watch: {},
   methods: {
+    handleDownloadExcel: function() {
+      const workbook = new ExcelJS.Workbook();
+      const rows = [];
+      this.items.forEach((item) => {
+        rows.push([
+          item.family.name,
+          item.family.headFamilyTypeId.name,
+          item.family.headFamilyIdentification,
+          `${item.family.headFamilyFirstName} ${item.family.headFamilyLastName}`,
+          item.family.headFamilyRelationship.name,
+          item.family.headFamilyGender,
+          item.family.headFamilyPhone,
+          item.family.birthDate,
+          item.family.birthDate
+            ? dayjs(item.family.birthDate).fromNow(true)
+            : 0,
+        ]);
+        item.familyMembers.forEach((familyMember) => {
+          rows.push([
+            item.family.name,
+            familyMember.typeId.name,
+            familyMember.identification,
+            `${familyMember.firstName} ${familyMember.lastName}`,
+            familyMember.relationship.name,
+            familyMember.gender,
+            familyMember.phone,
+            familyMember.birthDate,
+            familyMember.birthDate
+              ? dayjs(familyMember.birthDate).fromNow(true)
+              : "0",
+          ]);
+        });
+      });
+      const worksheetFilter = workbook.addWorksheet("familias");
+      worksheetFilter.addTable({
+        name: "MyTable",
+        ref: "A1",
+        headerRow: true,
+        totalsRow: true,
+        columns: [
+          { name: "Familia", filterButton: true },
+          { name: "Tipo de documento", filterButton: true },
+          { name: "Numero identificacion", filterButton: true },
+          { name: "Nombre del miembro", filterButton: true },
+          { name: "Relacion Familiar", filterButton: true },
+          { name: "Genero", filterButton: true },
+          { name: "Telefono de contacto", filterButton: true },
+          { name: "Fecha de nacimiento", filterButton: true },
+          { name: "Edad", filterButton: true },
+        ],
+        rows: rows,
+      });
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(
+          new Blob([buffer], { type: "application/octet-stream" }),
+          "acfpfamilias.xlsx"
+        );
+      });
+    },
     hanldeSave: function() {
       this.dialogCreate = false;
       this.fetchAllFamilies();
@@ -197,8 +274,7 @@ export default {
     fetchAllFamilies: async function() {
       try {
         this.loading = true;
-        await this.$store.dispatch(FAMILY_GET_ALL).catch(() => {
-        });
+        await this.$store.dispatch(FAMILY_GET_ALL).catch(() => {});
         this.loading = false;
       } catch (error) {
         this.loading = false;
