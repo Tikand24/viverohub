@@ -27,6 +27,7 @@
             :items="items"
             :items-per-page="perPage"
             :loading="loading"
+            dense
             class="elevation-1"
             :search="search"
             ><template v-slot:top>
@@ -39,7 +40,29 @@
                 >
                   <v-icon dark>mdi-file-excel</v-icon>
                 </v-btn>
+                <v-btn
+                  class="ma-2"
+                  dark
+                  color="red"
+                  @click="() => handleMigration()"
+                >
+                  <v-icon dark>mdi-file-excel</v-icon>
+                </v-btn>
               </div>
+            </template>
+            <template v-slot:item.family.grupoSisben="{ item }">
+              <template v-if="item.family.grupoSisben">
+                <template v-if="item.family.grupoSisben.split(':').length > 1">
+                  <v-chip
+                    :color="sisbenColor(item.family.grupoSisben)"
+                    dark
+                    small
+                  >
+                    {{ item.family.grupoSisben.split(":")[0] }}
+                  </v-chip>
+                  {{ item.family.grupoSisben.split(":")[1] }}
+                </template>
+              </template>
             </template>
             <template v-slot:item.action="{ item }">
               <v-tooltip top>
@@ -143,10 +166,13 @@
 import dayjs from "dayjs";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { FAMILY_GET_ALL, FAMILY_REMOVE } from "@/store/masters";
+import { FAMILY_GET_ALL, FAMILY_REMOVE, FAMILY_SET } from "@/store/masters";
 import CreateFamily from "../../../components/Family/CreateFamily.vue";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { SNACK_SHOW } from "@/store/snackbar";
+import getColorSisben from "../../../utils/ParseDataFamily";
 import "dayjs/locale/es";
+
 dayjs.locale("es");
 dayjs.extend(relativeTime);
 export default {
@@ -174,14 +200,17 @@ export default {
     currentPage: 1,
     numeroPaginas: 1,
     path: "",
-    perPage: 5,
+    perPage: 15,
     loading: false,
     search: "",
     optionsTable: {},
     headers: [
-      { text: "Familia", value: "family.name" },
       { text: "Cabeza de hogar", value: "family.headFamilyFirstName" },
+      { text: "Cedula", value: "family.headFamilyIdentification" },
       { text: "Telefono", value: "family.headFamilyPhone" },
+      { text: "Genero", value: "family.headFamilyGender" },
+      { text: "Sisben", value: "family.grupoSisben" },
+      { text: "Grupo Etnico", value: "family.grupoEtnico" },
       { text: "Estado", value: "status" },
       { text: "Opciones", value: "action" },
     ],
@@ -193,6 +222,27 @@ export default {
   },
   watch: {},
   methods: {
+    sisbenColor: function(sisben) {
+      return getColorSisben(sisben);
+    },
+    handleMigration: async function() {
+      await this.$store
+        .dispatch(FAMILY_SET, {})
+        .then((response) => {
+          console.log("create list fnc", response);
+          this.$store.commit(SNACK_SHOW, {
+            msg: "Familia guardada correctamente",
+            color: "success",
+          });
+        })
+        .catch((err) => {
+          console.log("err", err);
+          this.$store.commit(SNACK_SHOW, {
+            msg: "Error al guardar la planta",
+            color: "error",
+          });
+        });
+    },
     handleDownloadExcel: function() {
       const workbook = new ExcelJS.Workbook();
       const rows = [];

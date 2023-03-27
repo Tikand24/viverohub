@@ -12,23 +12,24 @@ import {
   getAllFamilies,
   getFamilyById,
   removeFamily,
-} from '../firebase/client';
-export const ROUTE_GET = 'ROUTE_GET';
-export const ROUTE_SET = 'ROUTE_SET';
-export const ROUTE_UPDATE = 'ROUTE_UPDATE';
-export const ROUTE_GET_ALL = 'ROUTE_GET_ALL';
-export const ROUTE_SET_ALL = 'ROUTE_SET_ALL';
-export const CUSTOMER_GET = 'CUSTOMER_GET';
-export const CUSTOMER_SET = 'CUSTOMER_SET';
-export const CUSTOMER_UPDATE = 'CUSTOMER_UPDATE';
-export const CUSTOMER_GET_ALL = 'CUSTOMER_GET_ALL';
-export const CUSTOMER_SET_ALL = 'CUSTOMER_SET_ALL';
-export const FAMILY_GET = 'FAMILY_GET';
-export const FAMILY_SET = 'FAMILY_SET';
-export const FAMILY_UPDATE = 'FAMILY_UPDATE';
-export const FAMILY_GET_ALL = 'FAMILY_GET_ALL';
-export const FAMILY_SET_ALL = 'FAMILY_SET_ALL';
-export const FAMILY_REMOVE = 'FAMILY_REMOVE';
+} from "../firebase/client";
+export const ROUTE_GET = "ROUTE_GET";
+export const ROUTE_SET = "ROUTE_SET";
+export const ROUTE_UPDATE = "ROUTE_UPDATE";
+export const ROUTE_GET_ALL = "ROUTE_GET_ALL";
+export const ROUTE_SET_ALL = "ROUTE_SET_ALL";
+export const CUSTOMER_GET = "CUSTOMER_GET";
+export const CUSTOMER_SET = "CUSTOMER_SET";
+export const CUSTOMER_UPDATE = "CUSTOMER_UPDATE";
+export const CUSTOMER_GET_ALL = "CUSTOMER_GET_ALL";
+export const CUSTOMER_SET_ALL = "CUSTOMER_SET_ALL";
+export const FAMILY_GET = "FAMILY_GET";
+export const FAMILY_SET = "FAMILY_SET";
+export const FAMILY_UPDATE = "FAMILY_UPDATE";
+export const FAMILY_GET_ALL = "FAMILY_GET_ALL";
+export const FAMILY_SET_ALL = "FAMILY_SET_ALL";
+export const FAMILY_REMOVE = "FAMILY_REMOVE";
+//import { MOCK_MIGRATION } from "./mockmigration";
 
 export default {
   state: {
@@ -210,7 +211,26 @@ export default {
           });
       });
     },
-    [FAMILY_SET]: ({ commit }, data) => {
+    [FAMILY_SET]: async ({ commit }, data) => {
+      /**
+       * 
+       * Migration
+      const data2 = MOCK_MIGRATION;
+      
+      for await (const family of data2) {
+        addFamily({ family, familyMembers: [], status: "activo" })
+          .then((e) => {
+            console.log("succes", family.nombre, e);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+      commit(FAMILY_SET, { family: data, isPush: true });
+      return new Promise((resolve) => {
+        resolve();
+      });
+       */
       return new Promise((resolve, reject) => {
         addFamily(data)
           .then(() => {
@@ -255,7 +275,7 @@ export default {
           });
       });
     },
-    [FAMILY_REMOVE]: ({commit},id) => {
+    [FAMILY_REMOVE]: ({ commit }, id) => {
       return new Promise((resolve, reject) => {
         removeFamily(id)
           .then(() => {
@@ -267,8 +287,8 @@ export default {
           });
       });
     },
-    
-    [FAMILY_UPDATE]: ({commit},data) => {
+
+    [FAMILY_UPDATE]: ({ commit }, data) => {
       return new Promise((resolve, reject) => {
         updateFamily(data)
           .then(() => {

@@ -45,7 +45,10 @@ export default {
       items: [
           { title: 'Inicio', icon: 'mdi-view-dashboard',route:'/' },
           { title: 'Familias', icon: 'mdi-home',route:'/masters/families' },
-          { title: 'Map', icon: 'mdi-map',route:'/map' },
+          { title: 'Mapa', icon: 'mdi-map',route:'/map' },
+          { title: 'Datos maestros', icon: 'mdi-database-search',route:'/master-data' },
+          { title: 'Estadisticas', icon: 'mdi-chart-bar',route:'/statistics' },
+          
         ],
   }),
   props:['drawer'],

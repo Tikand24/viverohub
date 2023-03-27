@@ -1,4 +1,4 @@
- <template>
+<template>
   <v-container id="dashboard-view" fluid tag="section">
     <v-row>
       <v-col cols="12">
@@ -25,8 +25,7 @@
             :cols="chart.colS ? chart.colS : '12'"
             :md="chart.colMd ? chart.colMd : '6'"
             :lg="chart.colLg ? chart.colLg : '4'"
-          >
-            <material-chart-card
+            ><material-chart-card
               :color="chart.color"
               :data="chart.data"
               :options="chart.options"
@@ -66,7 +65,24 @@
             </div>
           </template>
           <v-card-text>
-            <v-data-table :headers="headers" :items="families" />
+            <v-data-table dense :headers="headersFamily" :items="families">
+              <template v-slot:item.family.grupoSisben="{ item }">
+                <template v-if="item.family.grupoSisben">
+                  <template
+                    v-if="item.family.grupoSisben.split(':').length > 1"
+                  >
+                    <v-chip
+                      :color="sisbenColor(item.family.grupoSisben)"
+                      dark
+                      small
+                    >
+                      {{ item.family.grupoSisben.split(":")[0] }}
+                    </v-chip>
+                    {{ item.family.grupoSisben.split(":")[1] }}
+                  </template>
+                </template>
+              </template></v-data-table
+            >
           </v-card-text>
         </material-card>
       </v-col>
@@ -102,17 +118,61 @@
           <v-tabs-items v-model="tabs" background-color="transparent">
             <v-tab-item>
               <v-card-text>
-                <v-data-table :headers="headerGender" :items="mujeresFamilia" />
+                <v-data-table
+                  dense
+                  :headers="headerGender"
+                  :items="mujeresFamilia"
+                  ><template v-slot:item.family.grupoSisben="{ item }">
+                    <template v-if="item.family.grupoSisben">
+                      <template
+                        v-if="item.family.grupoSisben.split(':').length > 1"
+                      >
+                        <v-chip
+                          :color="sisbenColor(item.family.grupoSisben)"
+                          dark
+                          small
+                        >
+                          {{ item.family.grupoSisben.split(":")[0] }}
+                        </v-chip>
+                        {{ item.family.grupoSisben.split(":")[1] }}
+                      </template>
+                    </template>
+                  </template></v-data-table
+                >
               </v-card-text>
             </v-tab-item>
             <v-tab-item>
               <v-card-text>
-                <v-data-table :headers="headerGender" :items="hombresFamilia" />
+                <v-data-table
+                  dense
+                  :headers="headerGender"
+                  :items="hombresFamilia"
+                  ><template v-slot:item.family.grupoSisben="{ item }">
+                    <template v-if="item.family.grupoSisben">
+                      <template
+                        v-if="item.family.grupoSisben.split(':').length > 1"
+                      >
+                        <v-chip
+                          :color="sisbenColor(item.family.grupoSisben)"
+                          dark
+                          small
+                        >
+                          {{ item.family.grupoSisben.split(":")[0] }}
+                        </v-chip>
+                        {{ item.family.grupoSisben.split(":")[1] }}
+                      </template>
+                    </template>
+                  </template></v-data-table
+                >
               </v-card-text>
             </v-tab-item>
             <v-tab-item>
               <v-card-text>
-                <v-data-table :headers="headerGender" :items="otrosFamilia" />
+                <v-data-table
+                  dense
+                  :headers="headerGender"
+                  :items="otrosFamilia"
+                />
               </v-card-text>
             </v-tab-item>
           </v-tabs-items>
@@ -123,20 +183,22 @@
 </template>
 
 <script>
-import Vue from "vue";
 import MaterialStatCard from "../../../components/app/MaterialStatsCard.vue";
-import MaterialChartCard from "../../../components/app/MaterialChartCard.vue";
+//import MaterialChartGenericCard from "@/components/app/MaterialChartGenericCard.vue";
 import MaterialCard from "../../../components/app/MaterialCard.vue";
 import { FAMILY_GET_ALL } from "@/store/masters";
+import getColorSisben from "../../../utils/ParseDataFamily";
+import MaterialChartCard from "../../../components/app/MaterialChartCard.vue";
+import Vue from "vue";
 
 const lineSmooth = Vue.chartist.Interpolation.cardinal({
   tension: 0,
 });
-
 export default {
   name: "FamilyStatistics",
   components: {
     MaterialStatCard,
+    //MaterialChartGenericCard,
     MaterialChartCard,
     MaterialCard,
   },
@@ -172,7 +234,7 @@ export default {
             {
               seriesBarDistance: 5,
               axisX: {
-                labelInterpolationFnc: function (value) {
+                labelInterpolationFnc: function(value) {
                   return value[0];
                 },
               },
@@ -212,7 +274,7 @@ export default {
             {
               seriesBarDistance: 5,
               axisX: {
-                labelInterpolationFnc: function (value) {
+                labelInterpolationFnc: function(value) {
                   return value[0];
                 },
               },
@@ -272,15 +334,15 @@ export default {
         colLg: "4",
       },
     ],
-    headers: [
-      { text: "Familia", value: "family.name" },
+    headersFamily: [
       { text: "Cabeza de hogar", value: "family.headFamilyFirstName" },
       { text: "Telefono", value: "family.headFamilyPhone" },
-      { text: "Estado", value: "status" },
+      { text: "Sisben", value: "family.grupoSisben" },
     ],
     headerGender: [
-      { text: "Nombre", value: "name" },
-      { text: "Telefono", value: "phone" },
+      { text: "Nombre", value: "family.headFamilyFirstName" },
+      { text: "Telefono", value: "family.headFamilyPhone" },
+      { text: "Sisben", value: "family.grupoSisben" },
     ],
     items: [],
     stats: [
@@ -357,39 +419,57 @@ export default {
   }),
 
   methods: {
-    setNumeroSocios: function () {
+    sisbenColor: function(sisben) {
+      return getColorSisben(sisben);
+    },
+    setNumeroSocios: function() {
       const stats = this.stats.find((s) => s.name == "socios");
       stats.value = this.families.length;
     },
-    setNumeroCampesinos: function (){
-      let socios = 0;
+    setNumeroCampesinos: function() {
+      let farmers = 0;
       this.families.forEach((f) => {
-        socios = socios + (f.familyMembers.length + 1);
+        if (f.family) {
+          if (f.family.numeroMiembrosHogar) {
+            farmers = farmers + parseInt(f.family.numeroMiembrosHogar);
+          }
+        }
       });
       const stats = this.stats.find((s) => s.name == "campesinos");
-      stats.value = socios;
+      stats.value = farmers;
     },
-    setNumeroFamilias: function () {
+    setNumeroFamilias: function() {
       const stats = this.stats.find((s) => s.name == "familias");
       stats.value = this.families.length;
     },
-    setCabezaHogarBar: function () {
+    setCabezaHogarBar: function() {
       const chart = this.charts.find((s) => s.name == "cabezahogarbar");
-      chart.data.series = [];
+      chart.data.series = [
+        [this.hombresFamilia.length, this.mujeresFamilia.length],
+      ];
+      chart.subtitle = `H: ${this.hombresFamilia.length} M: ${this.mujeresFamilia.length}`;
 
-      chart.value = this.families.length;
+      const chartAssociated = this.charts.find(
+        (s) => s.name == "generoasociadosbar"
+      );
+      chartAssociated.data.series = [
+        [this.hombresFamilia.length, this.mujeresFamilia.length],
+      ];
+      chartAssociated.subtitle = `H: ${this.hombresFamilia.length} M: ${this.mujeresFamilia.length}`;
     },
-    fetchAllFamilies: function () {
+    fetchAllFamilies: function() {
       this.$store.dispatch(FAMILY_GET_ALL).catch((error) => {
         console.log("error", error);
       });
     },
-    
   },
   watch: {
     families(val) {
       if (val) {
         this.setNumeroSocios();
+        this.setNumeroCampesinos();
+        this.setNumeroFamilias();
+        this.setCabezaHogarBar();
       }
     },
   },
@@ -402,19 +482,13 @@ export default {
       this.families.forEach((f) => {
         if (f.family) {
           if (f.family.headFamilyGender == "Mujer") {
-            muejeres.push({
-              name: `${f.family.headFamilyFirstName} ${f.family.headFamilyLastName}`,
-              phone: f.family.headFamilyPhone,
-            });
+            muejeres.push(f);
           }
         }
         if (f.familyMembers) {
           f.familyMembers.forEach((fm) => {
             if (fm.gender == "Mujer") {
-              muejeres.push({
-                name: `${fm.firstName} ${fm.lastName}`,
-                phone: fm.phone,
-              });
+              muejeres.push(fm);
             }
           });
         }
@@ -426,19 +500,13 @@ export default {
       this.families.forEach((f) => {
         if (f.family) {
           if (f.family.headFamilyGender == "Hombre") {
-            hombres.push({
-              name: `${f.family.headFamilyFirstName} ${f.family.headFamilyLastName}`,
-              phone: f.family.headFamilyPhone,
-            });
+            hombres.push(f);
           }
         }
         if (f.familyMembers) {
           f.familyMembers.forEach((fm) => {
             if (fm.gender == "Hombre") {
-              hombres.push({
-                name: `${fm.firstName} ${fm.lastName}`,
-                phone: fm.phone,
-              });
+              hombres.push(fm);
             }
           });
         }

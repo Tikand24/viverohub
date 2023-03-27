@@ -14,6 +14,7 @@ import Routes from '../views/Masters/Routes/Routes.vue';
 import Customers from '../views/Masters/Customers/Customers.vue';
 import Family from '../views/Masters/Family/Family.vue';
 import FamilyStatistics from '../views/Masters/Family/FamilyStatistics.vue';
+import MasterData from '../views/MasterData/MasterData.vue';
 import Error404 from '../views/Error404.vue';
 
 Vue.use(VueRouter);
@@ -48,6 +49,11 @@ const routes = [
     path: '/vitrine',
     name: 'Vitrine',
     component: Vitrine,
+  },
+  {
+    path: '/master-data',
+    name: 'MasterData',
+    component: MasterData,
   },
   {
     path: '/masters/',
