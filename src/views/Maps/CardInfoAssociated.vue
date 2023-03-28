@@ -6,7 +6,7 @@
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title v-html="familyData.family.name"></v-list-item-title>
+        <v-list-item-title v-html="familyData.family.nombre"></v-list-item-title>
         <v-list-item-subtitle
           v-html="
             `Finca: ${familyData.family.finca} </br> Telefono: ${familyData.family.headFamilyPhone}`

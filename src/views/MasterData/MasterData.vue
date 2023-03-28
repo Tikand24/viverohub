@@ -123,7 +123,7 @@ export default {
           lg: "12",
         },
         headers: [
-          { text: "Cabeza de hogar", value: "family.name" },
+          { text: "Cabeza de hogar", value: "family.nombre" },
           { text: "Nombre", value: "family.headFamilyFirstName" },
           { text: "Cedula", value: "family.headFamilyIdentification" },
           { text: "Telefono", value: "family.headFamilyPhone" },

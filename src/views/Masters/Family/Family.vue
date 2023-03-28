@@ -248,7 +248,7 @@ export default {
       const rows = [];
       this.items.forEach((item) => {
         rows.push([
-          item.family.name,
+          item.family.nombre,
           item.family.headFamilyTypeId.name,
           item.family.headFamilyIdentification,
           `${item.family.headFamilyFirstName} ${item.family.headFamilyLastName}`,
@@ -262,7 +262,7 @@ export default {
         ]);
         item.familyMembers.forEach((familyMember) => {
           rows.push([
-            item.family.name,
+            item.family.nombre,
             familyMember.typeId.name,
             familyMember.identification,
             `${familyMember.firstName} ${familyMember.lastName}`,

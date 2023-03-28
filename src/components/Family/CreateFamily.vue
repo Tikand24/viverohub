@@ -32,7 +32,7 @@
               <v-col cols="12" md="12" lg="12">
                 <v-text-field
                   outlined
-                  v-model="family.name"
+                  v-model="family.nombre"
                   label="Nombre de la familia"
                   persistent-hint
                   hint="Por favor ingresa el nombre"
@@ -484,7 +484,7 @@ export default {
       this.modalPickerDateMember = false;
     },
     validFamily: function() {
-      if (this.family.name.length <= 0) {
+      if (this.family.nombre.length <= 0) {
         this.$store.commit(SNACK_SHOW, {
           msg: "Digite el nombre de la familia",
           color: "warning",

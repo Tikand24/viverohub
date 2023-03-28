@@ -51,7 +51,7 @@
         <v-list>
           <v-list-item-group v-model="itemsSelected" multiple color="indigo">
             <v-list-item
-              v-for="(associate, i) in associates"
+              v-for="(associate, i) in associatesList"
               :key="`${associate.id}${i}`"
               :disabled="
                 !(associate.family.latitud && associate.family.longitud)
@@ -70,7 +70,7 @@
 
               <v-list-item-content>
                 <v-list-item-title
-                  v-html="associate.family.name"
+                  v-html="associate.family.nombre"
                 ></v-list-item-title>
                 <v-list-item-subtitle
                   class="text--primary"
@@ -95,15 +95,15 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { associationMapDraw } from "../../core/Maps/Associations";
 import { FAMILY_GET_ALL } from "@/store/masters";
 //import CardInfoAssociated from "./CardInfoAssociated.vue";
-import imgFarmerMale from "@/assets/farmermale.png"
-import imgFarmerFemale from "@/assets/farmerfemale.png"
+import imgFarmerMale from "@/assets/farmermale.png";
+import imgFarmerFemale from "@/assets/farmerfemale.png";
 export default {
   name: "Map",
   //components: { CardInfoAssociated },
   data: () => ({
     markers: [],
-    imgFarmerMale:imgFarmerMale,
-    imgFarmerFemale:imgFarmerFemale,
+    imgFarmerMale: imgFarmerMale,
+    imgFarmerFemale: imgFarmerFemale,
     mapOptions: {
       center: {
         lat: 4.4404065,
@@ -118,10 +118,18 @@ export default {
     valueChip: [],
     flightPath: null,
     itemsSelected: [],
+    associatesList: [],
   }),
   computed: {
     associates() {
       return this.$store.getters.families;
+    },
+  },
+  watch: {
+    associates(val) {
+      if (val) {
+        this.associatesList = val.map(v=>v)
+      }
     },
   },
   methods: {
@@ -152,7 +160,7 @@ export default {
         marker.addListener("click", () => {
           this.infoWindow.setOptions({
             content: `<div>
-              ${associate.family.name}
+              ${associate.family.nombre}
               </br>
               Finca: ${associate.family.finca}
               </div>`,
